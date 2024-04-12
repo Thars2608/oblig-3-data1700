@@ -2,9 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Kinobilletter</title>
+    <script src="script.js"></script>
+    //Bootstrap css link
+    link
 </head>
 <body>
-
+//Overskrift
+<h1>Kinobilletter</h1>
+//Valg av filmer
+<label for="filmer">Filmer:</label>
+<select id="filmer">
+    <option value="Fast and furious 5">Fast and furious 5</option>
+    <option value="Avenger">Avengers</option>
+    <option value="Star wars">Star wars</option>
+    <option value="Conjuring">Conjuring</option>
+    <option value="Bad boys">Bad boys</option>
+</select>
+<br>
+//Velge antall billetter
+<label for="antall">Antall:</label>
+<input type="number" id="antall">
+<span id="antallFeil"></span>
+<br>
+//Skrive inn fornavn
+<label for="fornavn">Fornavn:</label>
+<input type="text" id="fornavn">
+<span id="fornavnFeil"></span>
+<br>
+//Skrive inn etternavn
+<label for="etternavn">Etternavn:</label>
+<input type="text" id="etternavn">
+<span id="etternavnFeil"></span>
+<br>
+//Skrive inn epost
+<label for="email">E-post:</label>
+<input type="text" id="email">
+<span id="emailFeil"></span>
+<br>
+//Skrive inn telefon nummer
+<label for="telefon">Telefon:</label>
+<input type="number" id="telefon">
+<span id="telefonFeil"></span>
+<br>
+//Buttons for å kjøre de forskjellige funksjonene i script
+<button onclick="kjopBillett()">Kjøp billett</button>
+<button onclick="slettBilletter()">Slett alle billetter</button>
+//Liste av billettene som har blitt kjøpt
+<h2>Billettliste:</h2>
+<ul id="billettListe"></ul>
 </body>
 </html>
