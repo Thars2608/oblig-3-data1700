@@ -59,6 +59,11 @@ function kjopBillett() {
     billetter.push(billett);
     visBilletter();
     resetInputFelt();
+
+    $.post("lagreAlle", billett, function (data){
+        console.log("Data lagret i server:", data);
+        hentAlle();
+    });
 }
 
 //function som legger billettene i en liste og viser dem
@@ -86,6 +91,11 @@ function resetInputFelt() {
 function slettBilletter(){
     billetter = [];
     visBilletter();
+//server
+    $.get("/slettAlle", function (){
+        console.log("All data slettet fra server.");
+        hentAlle();
+    });
 }
 
 //regex for epost
@@ -99,4 +109,12 @@ function valideringAvNummer(telefon) {
     const re = /^\d{8}$/;
     return re.test(telefon);
 }
+
+function hentAlle(){
+    $.get("/hentAlle", function (data){
+        console.log("data motatt fra server:", data);
+        visBilletter(data)
+    });
+}
+
 
