@@ -3,88 +3,98 @@ let billetter = [];
 
 //function som sjekker om alle feltene er fylt ut og skrevet riktig, samtidig legger billettene til i en liste i HTML
 function kjopBillett() {
-    const filmInput = document.getElementById('filmer').value;
-    const antallInput = document.getElementById('antall').value;
-    const fornavnInput = document.getElementById('fornavn').value;
-    const etternavnInput = document.getElementById('etternavn').value;
-    const emailInput = document.getElementById('email').value;
-    const telefonInput = document.getElementById('telefon').value;
 
-    document.getElementById('antallFeil').textContent = '';
-    document.getElementById('fornavnFeil').textContent = '';
-    document.getElementById('etternavnFeil').textContent = '';
-    document.getElementById('emailFeil').textContent = '';
-    document.getElementById('telefonFeil').textContent = '';
+    let feil = false;
 
-    let gyldig = true;
-
-    if (antallInput === ''){
-        document.getElementById('antallFeil').textContent = 'Vennligst skriv hvor mange billetter';
-        gyldig = false;
+    let billett = {
+        filmer: document.getElementById('filmer').value,
+        antall: antallInput = document.getElementById('antall').value,
+        fornavn: fornavnInput = document.getElementById('fornavn').value,
+        etternavn: etternavnInput = document.getElementById('etternavn').value,
+        epost: emailInput = document.getElementById('email').value,
+        telefon: telefonInput = document.getElementById('telefon').value,
     }
 
-    if (fornavnInput === ''){
-        document.getElementById('fornavnFeil').textContent = 'Vennligst skriv inn fornavnet ditt';
-        gyldig = false;
+    for (let i in billett) {
+        if (billett[i] === "") {
+            document.getElementById(i + "Error").innerHTML = "Vennligst fyll ut " + i;
+            feil = true;
+        } else {
+            document.getElementById(i + "Error").innerHTML = " ";
+        }
     }
 
-    if (etternavnInput === ''){
-        document.getElementById('etternavnFeil').textContent = 'Vennligst skriv inn etternavnet ditt';
-        gyldig = false;
+    if (!feil) {
+        if (billett.antall < 1) {
+            document.getElementById("antallFeil").innerHTML = "Vennligst velg hvor mange billetter";
+            feil = true;
+        }
+        if (!valideringAvNummer(billett.telefon)) {
+            document.getElementById("telefonFeil").innerHTML = "Vennligst skriv inn et telefon nummer";
+            feil = true;
+        }
+        if (!valideringAvEpost(billett.epost)) {
+            document.getElementById("emailFeil").innerHTML = "Vennligst skriv inn en email adresse";
+            feil = true;
+        }
     }
 
-    if (!valideringAvEpost(emailInput)){
-        document.getElementById('emailFeil').textContent = 'Vennligst skriv inn eposten din';
-        gyldig = false;
+    if (!feil) {
+        billetter.push(billetter);
+        resetInputFelt();
+
     }
 
-    if (!valideringAvNummer(telefonInput)){
-        document.getElementById('telefonFeil').textContent = 'Vennligst skriv inn telefon nummeret ditt';
-        gyldig = false;
-    }
 
-    if (!gyldig){
-        return;
-    }
-
-    const billett = {
-        film: filmInput,
-        antall: antallInput,
-        fornavn: fornavnInput,
-        etternavn: etternavnInput,
-        epost: emailInput,
-        telefon: telefonInput
-    };
-
-    billetter.push(billett);
-    visBilletter();
+    billetter.push(billetter);
+    visBilletter(billetter);
     resetInputFelt();
 
-    $.post("lagreAlle", billett, function (data){
+    $.post("lagreAlle", billett, function (data) {
         console.log("Data lagret i server:", data);
         hentAlle();
     });
 }
 
+    function resetInputFelt() {
+        const input = ["filmer", "antall", "fornavn", "etternavn", "telefon", "epost"]
+        for (let i = 0; i < input.length; i++) {
+            document.getElementById(input[i]).value = "";
+        }
+    }
+
+
 //function som legger billettene i en liste og viser dem
-function visBilletter() {
-    const billettListe = document.getElementById('billettListe');
-    billettListe.innerHTML = '';
+function visBilletter(billetter) {
+    let ut =
+        <tr>
+            <th>Film</th>
+            <th>Antall</th>
+            <th>Fornavn</th>
+            <th>Etternavn</th>
+            <th>Telefonnummer</th>
+            <th>E-post</th>
+        </tr>
+    ;
 
-    billetter.forEach(billett => {
-        const li = document.createElement('li');
-        li.textContent = `Film: ${billett.film}, antall: ${billett.antall}, fornavn: ${billett.fornavn}, etternavn: ${billett.etternavn}, E-post: ${billett.epost}, Telefon nummer: ${billett.telefon}`;
-        billettListe.appendChild(li);
-    });
+    for (let billett of billetter) {
+        ut +=
+            "<tr>" +
+            "<td>" + billett.filmer + "</td>" +
+            "<td>" + billett.antall + "</td>" +
+            "<td>" + billett.fornavn + "</td>" +
+            "<td>" + billett.etternavn + "</td>" +
+            "<td>" + billett.telefon + "</td>" +
+            "<td>" + billett.epost + "</td>" +
+            "</tr>"
+    }
+    $("#billetter").html(ut);
 }
-
-//function som resetter alle input felt
-function resetInputFelt() {
-    document.getElementById('antall').value = '';
-    document.getElementById('fornavn').value = '';
-    document.getElementById('etternavn').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('telefon').value = '';
+    function hentAlle() {
+        $.get("/hentAlle", function (data) {
+            console.log("data motatt fra server:", data);
+            visBilletter(data)
+        });
 }
 
 //function som sletter alle billetter
@@ -110,11 +120,6 @@ function valideringAvNummer(telefon) {
     return re.test(telefon);
 }
 
-function hentAlle(){
-    $.get("/hentAlle", function (data){
-        console.log("data motatt fra server:", data);
-        visBilletter(data)
-    });
-}
+
 
 
